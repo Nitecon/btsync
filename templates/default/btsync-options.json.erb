@@ -1,0 +1,48 @@
+{
+    "device_name": "<%= node['btsync']['main_options']['device_name'] %>",
+    "listening_port": <%= node['btsync']['main_options']['listening_port'] %>,
+    "storage_path": "<%= node['btsync']['main_options']['storage_path'] %>",
+    "pid_file": "<%= node['btsync']['main_options']['pid_dir'] %>/<%= node['btsync']['main_options']['pid_file'] %>",
+    "check_for_updates": <%= node['btsync']['main_options']['check_for_updates'] %>,
+    "use_upnp": <%= node['btsync']['main_options']['use_upnp'] %>,
+    "download_limit": <%= node['btsync']['main_options']['download_limit'] %>,
+    "upload_limit": <%= node['btsync']['main_options']['upload_limit'] %>,
+    "webui": {
+        "listen": "<%= node['btsync']['main_options']['webui']['listen'] %>",
+        "login": "<%= node['btsync']['main_options']['webui']['login'] %>",
+        "password": "<%= node['btsync']['main_options']['webui']['password'] %>"
+    }
+    ,
+    "disk_low_priority": <%= node['btsync']['main_options']['disk_low_priority'] %>,
+    "folder_rescan_interval": <%= node['btsync']['main_options']['folder_rescan_interval'] %>,
+    "lan_encrypt_data": <%= node['btsync']['main_options']['lan_encrypt_data'] %>,
+    "lan_use_tcp": <%= node['btsync']['main_options']['lan_use_tcp'] %>,
+    "rate_limit_local_peers": <%= node['btsync']['main_options']['rate_limit_local_peers'] %>,
+    "sync_max_time_diff": <%= node['btsync']['main_options']['sync_max_time_diff'] %>,
+    "sync_trash_ttl": <%= node['btsync']['main_options']['sync_trash_ttl'] %>
+    <% if !@sharedFolders.empty? %>
+    ,"shared_folders":
+    [
+    <% @sharedFolders.each do |sf| %>
+    {
+        "secret" : "<%= sf['secret'] %>",
+        "dir" : "<%= sf['dir'] %>",
+        "use_relay_server" : <% if sf.has_key?("use_relay_server") %><%= sf['use_relay_server'] %><% else %><%= @use_relay_server %><% end %>,
+        "use_tracker" : <% if sf.has_key?("use_tracker") %><%= sf['use_tracker'] %><% else %><%= @use_tracker %><% end %>,
+        "use_dht" : <% if sf.has_key?("use_dht") %><%= sf['use_dht'] %><% else %><%= @use_dht %><% end %>,
+        "search_lan" : <% if sf.has_key?("search_lan") %><%= sf['search_lan'] %><% else %><%= @search_lan %><% end %>,
+        "use_sync_trash" : <% if sf.has_key?("use_sync_trash") %><%= sf['use_sync_trash'] %><% else %><%= @use_sync_trash %><% end %>
+        <% if sf.has_key?("sync_servers") %>,
+        "known_hosts" :
+        [
+        <% sf.sync_servers.each do |server,port| %>
+        "<%= server %>:<%= port %>"<% if sf.sync_servers.last != server %>,<% end %>
+        <% end %>
+        ]
+        <% end %>
+        
+    }<% if @sharedFolders.last != sf %>,<% end %>
+    <% end %>
+    ]
+    <% end %>
+}
