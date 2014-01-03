@@ -20,10 +20,10 @@
     "rate_limit_local_peers": <%= node['btsync']['main_options']['rate_limit_local_peers'] %>,
     "sync_max_time_diff": <%= node['btsync']['main_options']['sync_max_time_diff'] %>,
     "sync_trash_ttl": <%= node['btsync']['main_options']['sync_trash_ttl'] %>
-    <% if !@sharedFolders.empty? %>
+    <% if @sharedFolders != nil && !@sharedFolders.empty? %>
     ,"shared_folders":
     [
-    <% @sharedFolders.each do |sf| %>
+    <% @sharedFolders.each do |name,sf| %>
     {
         "secret" : "<%= sf['secret'] %>",
         "dir" : "<%= sf['dir'] %>",
@@ -36,12 +36,11 @@
         "known_hosts" :
         [
         <% sf.sync_servers.each do |server,port| %>
-        "<%= server %>:<%= port %>"<% if sf.sync_servers.last != server %>,<% end %>
+        "<%= server %>:<%= node['btsync']['main_options']['listening_port'] %>"<% if sf.sync_servers.last != server %>,<% end %>
         <% end %>
         ]
         <% end %>
-        
-    }<% if @sharedFolders.last != sf %>,<% end %>
+    }<% if @sharedFolders.count > 1 && @sharedFolders.to_hash.keys.last != name %>,<% end %>
     <% end %>
     ]
     <% end %>

@@ -3,6 +3,9 @@ btsync CHANGELOG
 
 This file is used to list changes made in each version of the btsync cookbook.
 
+0.1.4
+- [Nitecon] - Starting integration of LWRP
+
 0.1.3
 -----
 - [Nitecon] - Updated attributes to be more generic

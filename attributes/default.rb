@@ -1,5 +1,5 @@
-default['btsync']['setup']['user'] = "apache"
-default['btsync']['setup']['group'] = "apache"
+default['btsync']['setup']['user'] = "root" # Change this to the actual user that will be doing the syncing EX: apache
+default['btsync']['setup']['group'] = "root" # Change this to the actual user that will be doing the syncing EX: apache
 default['btsync']['setup']['bin_dir'] = "/usr/local/bin"
 
 default['btsync']['main_options']['device_name'] = Chef::Config[:node_name]
@@ -37,8 +37,7 @@ default['btsync']['shared_folder_options']['use_sync_trash'] = 'false'
 
 # The list of *default* shared folders are listed below
 # If you decide to use the shared folders then the WebUI will be disabled and no longer usable
-# Enabling the shared folders with use_search will enable automatic finding and adding of hosts
-default['btsync']['shared_folders'] = nil
+# Enabling the shared folders with use_search will enable automatic finding and adding of host
 
 ### Adding folders without using an LWRP can be done by adding the following as your own attributes
 ### A generic name must be specified for the top level key Ex: FooBarFolder
