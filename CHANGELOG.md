@@ -3,6 +3,9 @@ btsync CHANGELOG
 
 This file is used to list changes made in each version of the btsync cookbook.
 
+0.1.5
+- [Nitecon] - Fixed issues with search not working correctly on hosted chef.
+
 0.1.4
 - [Nitecon] - Starting integration of LWRP
 
