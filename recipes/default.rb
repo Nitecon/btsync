@@ -16,50 +16,73 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-directory node['btsync']['main_options']['storage_path'] do
+
+directory "#{node['btsync']['main_options']['storage_path']}" do
   owner node['btsync']['setup']['user']
   group node['btsync']['setup']['group']
-  mode "0775"
+  mode '0775'
   action :create
   recursive true
 end
-directory node['btsync']['main_options']['pid_dir'] do
+directory "#{node['btsync']['main_options']['pid_dir']}" do
   owner node['btsync']['setup']['user']
   group node['btsync']['setup']['group']
-  mode "0775"
+  mode '0775'
   recursive true
   action :create
 end
-directory node['btsync']['main_options']['settings_file_dir'] do
+directory "#{node['btsync']['main_options']['settings_file_dir']}" do
   owner node['btsync']['setup']['user']
   group node['btsync']['setup']['group']
-  mode "0755"
+  mode '0755'
   action :create
 end
-node.set['btsync']['enabled'] = true
 optionsFile = node['btsync']['main_options']['settings_file_dir'] + "/" + node['btsync']['main_options']['settings_file_name']
-sharedFolders = node['btsync']['shared_folders']
-if Chef::Config[:solo]
-  Chef::Log.warn("This recipe uses search. Chef Solo does not support search.")
-else
-	KnownHosts = search(:node, "btsync:* NOT name:#{node.name}")
-  	sharedFolders.each do |name,sf|
-  		searched_sync_servers = Array.new
-    	KnownHosts.each do |servernode|
-    		
-    		btsync = servernode['btsync']
-	      	if !btsync.is_a?(String) && btsync.has_key?("shared_folders") && btsync['shared_folders'].has_key?(name) && btsync['enabled']
-	      		puts YAML::dump(servernode['btsync']['shared_folders'][name]['secret'])
-	      		puts YAML::dump(sf)
-	      		if servernode['btsync']['shared_folders'][name]['secret'] == sf['secret']
-	        		searched_sync_servers << servernode['ipaddress']
-	        	end
-	      	end
-    	end
-    	node.set['btsync']['shared_folders'][name]['sync_servers'] = searched_sync_servers
+
+#puts YAML::dump(nodes)
+my_shared_folders = Array.new
+if node['btsync'].has_key?('shared_folders')
+  if Chef::Config[:solo]
+    Chef::Log.warn("This recipe uses search. Chef Solo does not support search.")
+    node['btsync']['shared_folders'].each do |name,sf|
+      if node['btsync'].has_key?('known_hosts')
+        myfolder = {"name"=>name,"secret"=>sf['secret'],'dir'=>sf['path'],'sync_servers'=>node['btsync']['known_hosts']}
+        my_shared_folders << myfolder
+      end
+    end
+  else
+    #node_search = search(:node, "btsync:shared_folders NOT name:#{node.name}")
+    node_search = search(:node, "btsync:shared_folders")
+    node['btsync']['shared_folders'].each do |name,sf|
+      
+      if node['btsync'].has_key?('known_hosts')
+        Chef::Log.info("BTSYNC options include known hosts appending them now...\n")
+
+        known_nodes = Array.new
+        node['btsync']['known_hosts'].each do |ip|
+          Chef::Log.info("Adding known host: #{ip}\n")
+          known_nodes << :ip
+        end
+      else
+        Chef::Log.info("Known hosts do not exist, creating empty array set\n")
+        known_nodes = Array.new
+      end
+      node_search.each do |server|
+        if server['btsync'].has_key?('shared_folders') && server['btsync']['shared_folders'].has_key?(name) && server['btsync']['shared_folders'][name]['secret'] == sf['secret']
+          Chef::Log.info("Found additional nodes through search that match shared folder(#{name}): #{server['ipaddress']}\n")
+          known_nodes << :server['ipaddress']
+        end
+      end
+      use_relay_server = sf['use_relay_server'] != nil ? sf['use_relay_server'] : node['btsync']['shared_folder_options']['use_relay_server']
+      use_tracker  = sf['use_tracker'] != nil ? sf['use_tracker'] : node['btsync']['shared_folder_options']['use_tracker']
+      use_dht = sf['use_dht'] != nil ? sf['use_dht'] : node['btsync']['shared_folder_options']['use_dht']
+      search_lan = sf['search_lan'] != nil ? sf['search_lan'] : node['btsync']['shared_folder_options']['search_lan']
+      use_sync_trash = sf['use_sync_trash'] != nil ? sf['use_sync_trash'] : node['btsync']['shared_folder_options']['use_sync_trash']
+      Chef::Log.info("Added new shared folder: (#{name})\n")
+      my_shared_folders << {"name"=>name,"secret"=>sf['secret'],'dir'=>sf['dir'],'sync_servers'=>known_nodes}
+    end
   end
 end
-
 template optionsFile do
   source "btsync-options.json.erb"
   owner node['btsync']['setup']['user']
@@ -73,10 +96,13 @@ template optionsFile do
       :use_dht => node['btsync']['shared_folder_options']['use_dht'],
       :search_lan => node['btsync']['shared_folder_options']['search_lan'],
       :use_sync_trash => node['btsync']['shared_folder_options']['use_sync_trash'],
-      :sharedFolders => sharedFolders
+      :sharedFolders => my_shared_folders,
     }
   )
 end
+
+
+
 # Create service
 #
 template "/etc/init.d/btsync" do
@@ -101,8 +127,7 @@ when "i686"
   download_url << "http://btsync.s3-website-us-east-1.amazonaws.com/btsync_i386.tar.gz"
 end
 
-remote_file "Download BTSYNC Binary" do
-  path "/tmp/btsync.tar.gz"
+remote_file "#{Chef::Config[:file_cache_path]}/btsync.tar.gz" do
   source download_url
   backup false
   notifies :run, "execute[Unpack BTSYNC Tarball]", :immediately
@@ -110,8 +135,8 @@ remote_file "Download BTSYNC Binary" do
 end
 
 execute "Unpack BTSYNC Tarball" do
-  cwd "/tmp"
-  command "tar -xvzf /tmp/btsync.tar.gz; mv btsync #{node['btsync']['setup']['bin_dir']}/ && chmod +x #{node['btsync']['setup']['bin_dir']}/btsync"
+  cwd "#{Chef::Config[:file_cache_path]}/"
+  command "tar -xvzf #{Chef::Config[:file_cache_path]}/btsync.tar.gz; mv btsync #{node['btsync']['setup']['bin_dir']}/ && chmod +x #{node['btsync']['setup']['bin_dir']}/btsync"
   creates node['btsync']['setup']['bin_dir']+"/btsync"
   action :nothing
   notifies :restart, "service[btsync]", :immediately
@@ -119,12 +144,12 @@ end
 
 
 service 'btsync' do
-  case node['platform_family']
-  when 'rhel', 'fedora', 'suse','centos'
+  case node['platform']
+  when "centos", "redhat", "amazon", "scientific", "oracle"
     service_name 'btsync'
     restart_command '/sbin/service btsync restart && sleep 1'
     reload_command '/sbin/service btsync reload && sleep 1'
-  when 'debian'
+  when 'debian','ubuntu'
     service_name 'btsync'
     restart_command '/usr/sbin/invoke-rc.d btsync restart && sleep 1'
     reload_command '/usr/sbin/invoke-rc.d btsync reload && sleep 1'

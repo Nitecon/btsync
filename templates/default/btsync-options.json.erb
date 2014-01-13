@@ -23,20 +23,20 @@
     <% if @sharedFolders != nil && !@sharedFolders.empty? %>
     ,"shared_folders":
     [
-    <% @sharedFolders.each do |name,sf| %>
+    <% for sf in @sharedFolders do %>
     {
         "secret" : "<%= sf['secret'] %>",
         "dir" : "<%= sf['dir'] %>",
-        "use_relay_server" : <% if sf.has_key?("use_relay_server") %><%= sf['use_relay_server'] %><% else %><%= @use_relay_server %><% end %>,
-        "use_tracker" : <% if sf.has_key?("use_tracker") %><%= sf['use_tracker'] %><% else %><%= @use_tracker %><% end %>,
-        "use_dht" : <% if sf.has_key?("use_dht") %><%= sf['use_dht'] %><% else %><%= @use_dht %><% end %>,
-        "search_lan" : <% if sf.has_key?("search_lan") %><%= sf['search_lan'] %><% else %><%= @search_lan %><% end %>,
-        "use_sync_trash" : <% if sf.has_key?("use_sync_trash") %><%= sf['use_sync_trash'] %><% else %><%= @use_sync_trash %><% end %>
-        <% if sf.has_key?("sync_servers") %>,
+        "use_relay_server" : "<%= sf['use_relay_server'] %>",
+        "use_tracker" : "<%= sf['use_tracker'] %>",
+        "use_dht" : "<%= sf['use_dht'] %>",
+        "search_lan" : "<%= sf['search_lan'] %>",
+        "use_sync_trash" : "<%= sf['use_sync_trash'] %>",
+        <% if sf.include?("sync_servers") %>,
         "known_hosts" :
         [
-        <% sf.sync_servers.each do |server,port| %>
-        "<%= server %>:<%= node['btsync']['main_options']['listening_port'] %>"<% if sf.sync_servers.last != server %>,<% end %>
+        <% sf['sync_servers'].each do |ip| %>
+        "<%= ip %>:<%= node['btsync']['main_options']['listening_port'] %>"<% if sf['sync_servers'].last != server %>,<% end %>
         <% end %>
         ]
         <% end %>

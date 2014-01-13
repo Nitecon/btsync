@@ -1,8 +1,8 @@
 {
   "name": "btsync",
   "description": "Installs and configures Bittorrent Sync",
-  "long_description": "WIP\n---\n\nPlease see github repository location for WIP updates and general description and usage.\n\nDescription\n-----------\n\nThis _Chef_ cookbook installs and configures [_BittorrentSync_](http://www.bittorrent.com/sync)\n on a Linux compatible operating system.\n\nThe cookbook downloads the _btsync_ for i386 / x86_64 architectures via the btsync latest downloads site. \nunpacks and moves it to the directory you have specified in the node configuration (`/usr/local/bin/` by default).\n\nIt installs a service which enables you to start, stop, restart and check status of the _btsync_ process.\n\n\nRepository\n----------\n\nhttps://github.com/Nitecon/btsync\n\nLicense\n-------\n\nAuthor: Will Hattingh (<w.hattingh@nitecon.com>) and [contributors](https://github.com/Nitecon/btsync/graphs/contributors)\n\nLicense: Apache\n",
-  "maintainer": "nitecon",
+  "long_description": "Please see github for details\n-----------------------------\n\n Homepage: [_GitHub_](https://www.github.com/Nitecon/btsync)\n",
+  "maintainer": "Will Hattingh",
   "maintainer_email": "w.hattingh@nitecon.com",
   "license": "Apache",
   "platforms": {
@@ -28,5 +28,5 @@
   },
   "recipes": {
   },
-  "version": "0.1.5"
+  "version": "0.1.12"
 }
