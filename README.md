@@ -46,9 +46,51 @@ Just include `btsync` in your node's `run_list`:
 {
   "name":"my_node",
   "run_list": [
-    "recipe[btsync]"
+    "recipe[btsync::default]"
   ]
 }
+```
+
+Then add a path and options to your server role like so:
+
+```json
+{
+    "name": "examplerole",
+    "chef_type": "role",
+    "json_class": "Chef::Role",
+    "description": "Example Role for BTSYNC",
+    "override_attributes": {
+        "btsync":{
+            "setup":{
+                "user": "httpd",
+                "group": "httpd"
+            },
+            "main_options":{
+                "storage_path": "/data/btsync",
+                "webui":{
+                    "password": "SomeCoolPasswordForTheUI"
+                }
+            },
+            "shared_folders":{
+                "DescriptiveNameForPathToSearchON":{
+                    "dir":"/path/to/some/directory/",
+                    "secret":"S0M3L0NGB7SYNCG3N3R4T3DS3CR37",
+                    "SyncIgnore":[".DS_Store",".DS_Store?","._*",".Spotlight-V100",".Trashes","Icon?","ehthumbs.db","desktop.ini","Thumbs.db","somefile.log","logs/*"]
+                 },
+                "AnotherDirectoryToSync":{
+                  "dir":"/path/to/some/other/directory/",
+                  "secret":"S0M3L0NGB7SYNCG3N3R4T3DS3CR372",
+                  "SyncIgnore":[".DS_Store",".DS_Store?","._*",".Spotlight-V100",".Trashes","Icon?","ehthumbs.db","desktop.ini","Thumbs.db","somefile.log"]
+                }
+               }
+            }
+        }
+    },
+    "run_list": [
+        "recipe[btsync::default]"
+    ]
+}
+
 ```
 
 Contributing

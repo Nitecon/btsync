@@ -2,6 +2,9 @@ btsync CHANGELOG
 ================
 
 This file is used to list changes made in each version of the btsync cookbook.
+0.1.25 &amp 0.1.26
+- [Nitecon] - Upgraded versions to a working version that appears to be working across many different linux distros.
+- [Nitecon] - Incremented from 0.1.25 to 0.1.26 for documentation update.
 
 0.1.5
 - [Nitecon] - Fixed issues with search not working correctly on hosted chef.

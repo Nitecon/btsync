@@ -4,7 +4,7 @@ maintainer_email 'w.hattingh@nitecon.com'
 license          'Apache 2.0'
 description      'Installs/Configures btsync'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '0.1.25'
+version          '0.1.26'
 recipe            'btsync', 'Main Btsync configuration'
 depends 'partial_search'
 
