@@ -4,6 +4,7 @@
   "long_description": "Please see github for details\n-----------------------------\n\n Homepage: [_GitHub_](https://www.github.com/Nitecon/btsync)\n",
   "maintainer": "Will Hattingh",
   "maintainer_email": "w.hattingh@nitecon.com",
+  "homepage":"https://www.github.com/Nitecon/btsync",
   "license": "Apache",
   "platforms": {
   },
@@ -28,5 +29,5 @@
   },
   "recipes": {
   },
-  "version": "0.1.26"
+  "version": "0.1.27"
 }

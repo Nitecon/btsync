@@ -40,7 +40,7 @@
         <% end %>
         ]
         <% end %>
-    }<% if @sharedFolders.count > 1 && @sharedFolders.to_hash.keys.last != name %>,<% end %>
+    }<% if @sharedFolders.count > 1 && @sharedFolders.last != sf %>,<% end %>
     <% end %>
     ]
     <% end %>
