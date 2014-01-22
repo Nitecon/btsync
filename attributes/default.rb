@@ -34,6 +34,7 @@ default['btsync']['shared_folder_options']['use_tracker'] = 'false'
 default['btsync']['shared_folder_options']['use_dht'] = 'false'
 default['btsync']['shared_folder_options']['search_lan'] = 'true'
 default['btsync']['shared_folder_options']['use_sync_trash'] = 'false'
+default['btsync']['shared_folder_options']['SyncIgnore'] = %W[.DS_Store .DS_Store? ._* .Spotlight-V100 .Trashes ehthumbs.db desktop.ini]
 #default['btsync']['shared_folders'] = %w[]
 # The list of *default* shared folders are listed below
 # If you decide to use the shared folders then the WebUI will be disabled and no longer usable
@@ -55,7 +56,6 @@ default['btsync']['shared_folder_options']['use_sync_trash'] = 'false'
 #default['btsync']['shared_folders']['FooBarFolder']['search_lan'] = 'true'
 # Optional (It will use the shared_folder_options value if not specified) ##
 #default['btsync']['shared_folders']['FooBarFolder']['use_sync_trash'] = 'false'
-# When using hosted chef it will search for other servers with the same shared dir / secret ##
-#default['btsync']['shared_folders']['FooBarFolder']['use_search'] = 'false'
+
 
 #default['btsync']['shared_folder_options']['excludes'] = %w[.DS_Store .DS_Store? ._* .Spotlight-V100 .Trashes ehthumbs.db desktop.ini]

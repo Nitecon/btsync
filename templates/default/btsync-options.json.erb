@@ -27,16 +27,16 @@
     {
         "secret" : "<%= sf['secret'] %>",
         "dir" : "<%= sf['dir'] %>",
-        "use_relay_server" : "<%= sf['use_relay_server'] %>",
-        "use_tracker" : "<%= sf['use_tracker'] %>",
-        "use_dht" : "<%= sf['use_dht'] %>",
-        "search_lan" : "<%= sf['search_lan'] %>",
-        "use_sync_trash" : "<%= sf['use_sync_trash'] %>",
+        "use_relay_server" : <%= sf['use_relay_server'] %>,
+        "use_tracker" : <%= sf['use_tracker'] %>,
+        "use_dht" : <%= sf['use_dht'] %>,
+        "search_lan" : <%= sf['search_lan'] %>,
+        "use_sync_trash" : <%= sf['use_sync_trash'] %>
         <% if sf.include?("sync_servers") %>,
         "known_hosts" :
         [
         <% sf['sync_servers'].each do |ip| %>
-        "<%= ip %>:<%= node['btsync']['main_options']['listening_port'] %>"<% if sf['sync_servers'].last != server %>,<% end %>
+        "<%= ip %>:<%= node['btsync']['main_options']['listening_port'] %>"<% if sf['sync_servers'].last != ip %>,<% end %>
         <% end %>
         ]
         <% end %>
