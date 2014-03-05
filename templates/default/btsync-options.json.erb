@@ -33,12 +33,7 @@
         "search_lan" : <%= sf['search_lan'] %>,
         "use_sync_trash" : <%= sf['use_sync_trash'] %>
         <% if sf.include?("sync_servers") %>,
-        "known_hosts" :
-        [
-        <% sf['sync_servers'].each do |ip| %>
-        "<%= ip %>:<%= node['btsync']['main_options']['listening_port'] %>"<% if sf['sync_servers'].last != ip %>,<% end %>
-        <% end %>
-        ]
+        "known_hosts" : <%= sf['sync_servers'].map{|x| "#{x}:#{node['btsync']['main_options']['listening_port']}"}.uniq %>
         <% end %>
     }<% if @sharedFolders.count > 1 && @sharedFolders.last != sf %>,<% end %>
     <% end %>
