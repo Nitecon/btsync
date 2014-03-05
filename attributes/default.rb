@@ -23,7 +23,7 @@ default['btsync']['main_options']['rate_limit_local_peers'] = 'false'
 default['btsync']['main_options']['sync_max_time_diff'] = '300'
 default['btsync']['main_options']['sync_trash_ttl'] = '30'
 default['btsync']['known_hosts'] = %w[127.0.0.1 10.91.34.191]
-
+default['btsync']['main_options']['disabled_webui'] = false
 # These are default values for all of your shared folders that are added through LWRP
 # You may still specify these manually through the LWRP but in general I have found
 # that once the options are decided on it makes more sense to keep everything consistent
@@ -45,7 +45,7 @@ default['btsync']['shared_folder_options']['SyncIgnore'] = %W[.DS_Store .DS_Stor
 # Required Value to specify the directory to be synced ##
 #default['btsync']['shared_folders']['FooBarFolder']C = "/path/to/some/directory"
 # Required Value to specify the shared secret to be used during sync ##
-#default['btsync']['shared_folders']['FooBarFolder']['secret'] = "AVERYLONGKEYTOBEUSEDASSECRET" 
+#default['btsync']['shared_folders']['FooBarFolder']['secret'] = "AVERYLONGKEYTOBEUSEDASSECRET"
 # Optional (It will use the shared_folder_options value if not specified) ##
 #default['btsync']['shared_folders']['FooBarFolder']['use_relay_server'] = 'false'
 # Optional (It will use the shared_folder_options value if not specified) ##
