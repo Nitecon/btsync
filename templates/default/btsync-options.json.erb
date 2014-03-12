@@ -7,12 +7,14 @@
     "use_upnp": <%= node['btsync']['main_options']['use_upnp'] %>,
     "download_limit": <%= node['btsync']['main_options']['download_limit'] %>,
     "upload_limit": <%= node['btsync']['main_options']['upload_limit'] %>,
+    <% unless node['btsync']['main_options']['disabled_webui'] -%>
     "webui": {
         "listen": "<%= node['btsync']['main_options']['webui']['listen'] %>",
         "login": "<%= node['btsync']['main_options']['webui']['login'] %>",
         "password": "<%= node['btsync']['main_options']['webui']['password'] %>"
     }
     ,
+    <% end -%>
     "disk_low_priority": <%= node['btsync']['main_options']['disk_low_priority'] %>,
     "folder_rescan_interval": <%= node['btsync']['main_options']['folder_rescan_interval'] %>,
     "lan_encrypt_data": <%= node['btsync']['main_options']['lan_encrypt_data'] %>,
