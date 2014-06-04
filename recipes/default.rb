@@ -141,6 +141,8 @@ when "x86_64"
   download_url << "http://btsync.s3-website-us-east-1.amazonaws.com/btsync_x64.tar.gz"
 when "i686"
   download_url << "http://btsync.s3-website-us-east-1.amazonaws.com/btsync_i386.tar.gz"
+when "arm"
+    download_url << "http://btsync.s3-website-us-east-1.amazonaws.com/btsync_arm.tar.gz"
 end
 
 remote_file "#{Chef::Config[:file_cache_path]}/btsync.tar.gz" do
