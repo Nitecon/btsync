@@ -1,0 +1,69 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides: btsync
+# Required-Start: $local_fs $remote_fs
+# Required-Stop: $local_fs $remote_fs
+# Should-Start: $network
+# Should-Stop: $network
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Single-user daemonized version of btsync.
+# Description: Starts the btsync daemon for the specified user.
+### END INIT INFO
+ 
+BTUSER=<%= @btsync_user %>
+DAEMON=<%= @executable %>
+ 
+start() {
+  for btsuser in $BTUSER; do
+    config=<%= @options_file %>
+    if [ -f $config ]; then
+      echo "Starting BittorrentSync for $btsuser"
+      start-stop-daemon --pidfile <%= @pid_file %> -b -o -c $btsuser -S -u $btsuser -x $DAEMON -- --config $config
+    else
+      echo "Couldn't start BittorrentSync for $btsuser (no $config found)"
+    fi
+  done
+}
+ 
+stop() {
+  for btsuser in $BTUSER; do
+    dbpid=`pgrep -fu $btsuser $DAEMON`
+    if [ ! -z "$dbpid" ]; then
+      echo "Stopping BittorrentSync for $btsuser"
+      start-stop-daemon --pidfile <%= @pid_file %> -o -c $btsuser -K -u $btsuser -x $DAEMON
+    fi
+  done
+}
+ 
+status() {
+  for btsuser in $BTUSER; do
+    dbpid=`pgrep -fu $btsuser $DAEMON`
+    if [ -z "$dbpid" ]; then
+      echo "BittorrentSync for USER $btsuser: not running."
+    else
+      echo "BittorrentSync for USER $btsuser: running (pid $dbpid)"
+    fi
+  done
+}
+ 
+case "$1" in
+ start)
+start
+;;
+stop)
+stop
+;;
+restart|reload|force-reload)
+stop
+start
+;;
+status)
+status
+;;
+*)
+echo "Usage: /etc/init.d/btsync {start|stop|reload|force-reload|restart|status}"
+exit 1
+esac
+ 
+exit 0

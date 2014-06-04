@@ -167,7 +167,7 @@ service 'btsync' do
     service_name 'btsync'
     restart_command '/sbin/service btsync restart && sleep 1'
     reload_command '/sbin/service btsync reload && sleep 1'
-  when 'debian','ubuntu'
+  when 'debian','ubuntu', 'raspbian'
     service_name 'btsync'
     restart_command '/usr/sbin/invoke-rc.d btsync restart && sleep 1'
     reload_command '/usr/sbin/invoke-rc.d btsync reload && sleep 1'
