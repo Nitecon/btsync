@@ -54,7 +54,7 @@ if node['btsync'].has_key?('shared_folders')
     #node_search = search(:node, "btsync:shared_folders NOT name:#{node.name}")
     node_search = search(:node, "btsync:shared_folders")
     node['btsync']['shared_folders'].each do |name,sf|
-      
+
       if node['btsync'].has_key?('known_hosts')
         Chef::Log.info("BTSYNC options include known hosts appending them now...\n")
 
@@ -138,11 +138,11 @@ end
 download_url = ""
 case node["languages"]["ruby"]["host_cpu"]
 when "x86_64"
-  download_url << "http://www.bittorrent.com/sync/downloads/complete/os/x64"
+  download_url << "https://download-cdn.getsyncapp.com/stable/linux-x64/BitTorrent-Sync_x64.tar.gz"
 when "i686"
-  download_url << "http://www.bittorrent.com/sync/downloads/complete/os/i386"
+  download_url << "https://download-cdn.getsyncapp.com/stable/linux-i386/BitTorrent-Sync_i386.tar.gz"
 when "arm"
-    download_url << "http://www.bittorrent.com/sync/downloads/complete/os/arm"
+  download_url << "https://download-cdn.getsyncapp.com/stable/linux-arm/BitTorrent-Sync_arm.tar.gz"
 end
 
 remote_file "#{Chef::Config[:file_cache_path]}/btsync.tar.gz" do
